@@ -4,10 +4,7 @@ var redis = require("redis-url").connect(process.env.REDISTOGO_URL);
 var async = require("async");
 
 app.use(express.logger());
-
-app.get("/", function(req, res) {
-	res.send("Operations:<br />/devices<br />/devices/{id}<br />");
-});
+app.use("/", express.static(__dirname + "/static"));
 
 // Show device status. Ex: GET http://127.0.0.1:5000/devices/testId
 app.get("/devices/:id", function(req, res) {

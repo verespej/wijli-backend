@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+	<head>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular-resource.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+		<link rel="stylesheet" href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css">
+		<!--
+		<script src="./angular.min.js"></script>
+		<script src="./angular-resource.min.js"></script>
+		<script src="./jquery.min.js"></script>
+		<link rel="stylesheet" href="./bootstrap.css">
+		-->
+
+		<style type="text/css">
+			html {
+				min-height: 100%;
+			}
+			.gradient {
+				filter: progid:DXImageTransform.Microsoft.gradient(startColorstr = '#F9FDFF', endColorstr = '#i75D6FF');
+				-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr = '#F9FDFF', endColorstr = '#75D6FF')";
+				background-image: -moz-linear-gradient(top, #F9FDFF, #75D6FF);
+				background-image: -ms-linear-gradient(top, #F9FDFF, #75D6FF);
+				background-image: -o-linear-gradient(top, #F9FDFF, #75D6FF);
+				background-image: -webkit-linear-gradient(top, #F9FDFF, #75D6FF);
+				background-image: linear-gradient(top, #F9FDFF, #75D6FF);
+				-moz-background-clip: padding;
+				-webkit-background-clip: padding-box;
+				background-clip: padding-box;
+			}
+			.centered {
+				margin-left: auto;
+				margin-right: auto;
+			}
+			#deviceTable {
+				border-collapse: separate;
+				border-spacing: 20px 10px;
+				text-align: left;
+			}
+		</style>
+
+		<script>
+			function editplug(inputTagId) {
+			}
+
+			function expand(inputTagId, expandButtonId) {
+			}
+
+			function getTableRow(deviceName) {
+				var result = "<tr>";
+				result +=	"<td>" + deviceName + "</td>";
+				result += "<td>";
+				result += "<input id='status-" + deviceName + "' placeholder='Enter status' disabled /> ";
+				result += "<a href='javascript: void(0)' onclick='editplug(\"status-" + deviceName + "\")'><i class='icon-pencil'></i></a>";
+				result += "</td>";
+				result += "<td id='expand-" + deviceName + "'>";
+				result += "<a href='javascript: void(0)' onclick='expand(\"status-" + deviceName + "\", \"expand-" + deviceName + "\")'>";
+				result += "<i class='icon-plus-sign'></i>";
+				result += "</a>";
+				result += "</td>";
+				result += "</tr>";
+				return result;
+			}
+
+			function loadDevices() {
+				$("#deviceTable > tbody:last").append(getTableRow("plug"));
+				$("#deviceTable > tbody:last").append(getTableRow("led"));
+			}
+		</script>
+	</head>
+	<body onload="loadDevices()" class="gradient">
+		<img class="centered" style="display:block" src="./img/WijlyLogo500.png" />
+		<div class="centered" style="width:100%; text-align:center">
+			<h2><i>The Backend for All Your Devices</i></h2>
+			<br /><br /><br />
+			<table class="centered" id="deviceTable">
+				<thead>
+					<tr>
+						<th>Device</th>
+						<th>Status</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</body>
+</html>
