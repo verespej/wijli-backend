@@ -46,11 +46,11 @@
 			function expand(inputTagId, expandButtonId) {
 			}
 
-			function getTableRow(deviceName) {
+			function getTableRow(deviceName, deviceStatus) {
 				var result = "<tr>";
 				result +=	"<td>" + deviceName + "</td>";
 				result += "<td>";
-				result += "<input id='status-" + deviceName + "' placeholder='Enter status' disabled /> ";
+				result += "<input id='status-" + deviceName + "' placeholder='Enter status' value='" + deviceStatus + "' disabled /> ";
 				result += "<a href='javascript: void(0)' onclick='editplug(\"status-" + deviceName + "\")'><i class='icon-pencil'></i></a>";
 				result += "</td>";
 				result += "<td id='expand-" + deviceName + "'>";
@@ -63,8 +63,17 @@
 			}
 
 			function loadDevices() {
-				$("#deviceTable > tbody:last").append(getTableRow("plug"));
-				$("#deviceTable > tbody:last").append(getTableRow("led"));
+				$.getJSON("devices", function(devices) {
+						devices.forEach(function(deviceId) {
+							$.get("devices/" + deviceId, function(deviceStatus) {
+								$("#deviceTable > tbody:last").append(getTableRow(deviceId, deviceStatus));
+							}).error(function(xhr, status, error) {
+								alert("Status: " + status + "\nError: " + error);
+							});
+						});
+					}).error(function(xhr, status, error) {
+						alert("Status: " + status + "\nError: " + error);
+					});
 			}
 		</script>
 	</head>
