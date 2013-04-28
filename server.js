@@ -14,9 +14,9 @@ app.get("/devices/:id", function(req, res) {
 	var id = req.params.id;
 	redis.get("/devices/" + id, function(err, value) {
 		if (value == null) {
-			res.send("A device with id '" + id + "' has not been registered");
+			res.send({});//"A device with id '" + id + "' has not been registered");
 		} else {
-			res.send("Device id '" + id + "': " + value);
+			res.send(value);//"Device id '" + id + "': " + value);
 		}
 	});
 });
@@ -45,6 +45,8 @@ app.post("/devices/:id", function(req, res) {
 		}
 
 		redis.set("/devices/" + id, deviceStatus);
+
+		res.send("OK");
 	});
 });
 
@@ -52,14 +54,15 @@ app.post("/devices/:id", function(req, res) {
 app.get("/devices", function(req, res) {
 	redis.lrange("/devices", 0, -1, function(err, devices) {
 		if (devices == null || devices.length < 1) {
-			res.send("No devices registered");
-			//res.send(devices);
+			res.send({});
 		} else {
-			var result = devices.length + " REGISTERED DEVICES:<br />";
+			/*var resulAt = devices.length + " REGISTERED DEVICES:<br />";
 			devices.forEach(function(id) {
 				result += id + "<br />";
 			});
 			res.send(result);
+			*/
+			res.send(devices);
 		}
 	});
 });
@@ -68,21 +71,17 @@ app.get("/devices", function(req, res) {
 app.get("/devices/:id/messages", function(req, res) {
 	var id = req.params.id;
 
-	var count = 0;
 	var result = " MESSAGES:<br />";
 
 	redis.lrange("/devices/" + id + "/messages", 0, -1, function(err, messages) {
-		if (messages != null) {
-			for (var i = 0; i < messages.length; i++) {
-				count++;
+		if (messages == null || messages.length < 1) {
+				res.send({});//"No device with id '" + id + "' registered");
+		} else {
+			/*for (var i = 0; i < messages.length; i++) {
 				result += messages[i] + "<br />";
 			}
-		}
-
-		if (count < 1) {
-			res.send("No device with id '" + id + "' registered");
-		} else {
-			res.send(count + result);
+			res.send(messages.length + result);*/
+			res.send(messages);
 		}
 	});
 });
@@ -100,7 +99,7 @@ app.post("/devices/:id/messages", function(req, res) {
 			for (var i = 0; i < devices.length; i++) {
 				if (id == devices[i]) {
 					redis.lpush("/devices/" + id + "/messages", msg);
-					res.send("Message added");
+					res.send("OK");
 					return;
 				}
 			}
@@ -112,7 +111,7 @@ app.post("/devices/:id/messages", function(req, res) {
 // Clear all registered devices. Ex: GET http://127.0.0.1/reset
 app.get("/reset", function(req, res) {
 	redis.flushall();
-	res.send("DB cleared");
+	res.send("OK");
 });
 
 var port = process.env.PORT || 32123;
