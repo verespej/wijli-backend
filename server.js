@@ -11,7 +11,7 @@ app.get("/devices/:id", function(req, res) {
 	var id = req.params.id;
 	redis.get("/devices/" + id, function(err, value) {
 		if (value == null) {
-			res.send({});//"A device with id '" + id + "' has not been registered");
+			res.send(" ");//"A device with id '" + id + "' has not been registered");
 		} else {
 			res.send(value);//"Device id '" + id + "': " + value);
 		}
@@ -51,7 +51,7 @@ app.post("/devices/:id", function(req, res) {
 app.get("/devices", function(req, res) {
 	redis.lrange("/devices", 0, -1, function(err, devices) {
 		if (devices == null || devices.length < 1) {
-			res.send({});
+			res.send([]);
 		} else {
 			/*var resulAt = devices.length + " REGISTERED DEVICES:<br />";
 			devices.forEach(function(id) {

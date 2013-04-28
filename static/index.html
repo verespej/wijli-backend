@@ -41,6 +41,20 @@
 
 		<script>
 			function editplug(inputTagId) {
+				var elId = "input#" + inputTagId;
+				var disabled = $(elId).prop("disabled");
+
+				$(elId).prop("disabled", !disabled);
+
+				// Was enabled, so this is a commit
+				if (!disabled) {
+					var statusValue = $(elId).prop("value");
+					$.post("devices/" + inputTagId + "?status=" + statusValue, function(result) {
+						// Success -> do nothing
+					}).error(function(xhr, status, error) {
+						alert("Status: " + status + "\nError: " + error);
+					});
+				}
 			}
 
 			function expand(inputTagId, expandButtonId) {
