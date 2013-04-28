@@ -1,0 +1,3 @@
+echo "Make sure to run 'redis-server'"
+foreman start
+echo

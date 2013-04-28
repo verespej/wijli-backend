@@ -1,0 +1,2 @@
+curl -d "" http://127.0.0.1:5000/devices/$1/messages?message=$2
+echo

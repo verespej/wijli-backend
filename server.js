@@ -1,6 +1,7 @@
 var express = require("express");
 var app = express();
 var redis = require("redis-url").connect(process.env.REDISTOGO_URL);
+var async = require("async");
 
 app.use(express.logger());
 
@@ -59,6 +60,51 @@ app.get("/devices", function(req, res) {
 				result += id + "<br />";
 			});
 			res.send(result);
+		}
+	});
+});
+
+// Get device messages. Ex: GET http://127.0.0.1:5000/devices/test/messages
+app.get("/devices/:id/messages", function(req, res) {
+	var id = req.params.id;
+
+	var count = 0;
+	var result = " MESSAGES:<br />";
+
+	redis.lrange("/devices/" + id + "/messages", 0, -1, function(err, messages) {
+		if (messages != null) {
+			for (var i = 0; i < messages.length; i++) {
+				count++;
+				result += messages[i] + "<br />";
+			}
+		}
+
+		if (count < 1) {
+			res.send("No device with id '" + id + "' registered");
+		} else {
+			res.send(count + result);
+		}
+	});
+});
+
+// Send message to device. Ex: POST http://127.0.0.1:5000/devices/test/messages?message=doSomething
+app.post("/devices/:id/messages", function(req, res) {
+	var id = req.params.id;
+	var msg = req.query["message"];
+
+	var isRegistered = false;
+	redis.lrange("/devices", 0, -1, function(err, devices) {
+		if (devices == null || devices.length < 1) {
+			res.send("No devices registered");
+		} else {
+			for (var i = 0; i < devices.length; i++) {
+				if (id == devices[i]) {
+					redis.lpush("/devices/" + id + "/messages", msg);
+					res.send("Message added");
+					return;
+				}
+			}
+			res.send("No device with id '" + id + "' registered");
 		}
 	});
 });
