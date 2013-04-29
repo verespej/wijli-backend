@@ -40,7 +40,7 @@
 		</style>
 
 		<script>
-			function editplug(inputTagId) {
+			function editplug(inputTagId, deviceId) {
 				var elId = "input#" + inputTagId;
 				var disabled = $(elId).prop("disabled");
 
@@ -49,7 +49,7 @@
 				// Was enabled, so this is a commit
 				if (!disabled) {
 					var statusValue = $(elId).prop("value");
-					$.post("devices/" + inputTagId + "?status=" + statusValue, function(result) {
+					$.post("devices/" + deviceId + "?status=" + statusValue, function(result) {
 						// Success -> do nothing
 					}).error(function(xhr, status, error) {
 						alert("Status: " + status + "\nError: " + error);
@@ -65,7 +65,7 @@
 				result +=	"<td>" + deviceName + "</td>";
 				result += "<td>";
 				result += "<input id='status-" + deviceName + "' placeholder='Enter status' value='" + deviceStatus + "' disabled /> ";
-				result += "<a href='javascript: void(0)' onclick='editplug(\"status-" + deviceName + "\")'><i class='icon-pencil'></i></a>";
+				result += "<a href='javascript: void(0)' onclick='editplug(\"status-" + deviceName + "\", \"" + deviceName + "\")'><i class='icon-pencil'></i></a>";
 				result += "</td>";
 				result += "<td id='expand-" + deviceName + "'>";
 				result += "<a href='javascript: void(0)' onclick='expand(\"status-" + deviceName + "\", \"expand-" + deviceName + "\")'>";
