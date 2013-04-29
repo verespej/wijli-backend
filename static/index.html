@@ -43,12 +43,19 @@
 			function editplug(inputTagId, deviceId) {
 				var elId = "input#" + inputTagId;
 				var disabled = $(elId).prop("disabled");
+				var statusValue = $(elId).prop("value");
+
+				if (!disabled) {
+					if (statusValue != "on" && statusValue != "off") {
+						alert("Only 'on' and 'off' are valid status values");
+						return;
+					}
+				}
 
 				$(elId).prop("disabled", !disabled);
 
 				// Was enabled, so this is a commit
 				if (!disabled) {
-					var statusValue = $(elId).prop("value");
 					$.post("devices/" + deviceId + "?status=" + statusValue, function(result) {
 						// Success -> do nothing
 					}).error(function(xhr, status, error) {
